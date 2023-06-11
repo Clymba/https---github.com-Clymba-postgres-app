@@ -1,0 +1,56 @@
+@import "~bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@1,100&family=Roboto:wght@100&display=swap');
+
+
+
+input {
+  margin:10px;
+  border-radius: 5px;
+  margin-left: 10px;
+  padding:3px;
+  border-color:#E0E0E0 ;
+  border: 3px solid #ece8e8;
+}
+
+button {
+  border-radius: 5px;
+  margin-top: 10px;
+  background-color: #FFF0F5;
+  margin-bottom: 10px;
+  padding:10px;
+  border-color:#E0E0E0 ;
+  border-style: solid;
+}
+
+h1 {
+  margin-top: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+h2 {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h3 {
+  margin-top: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.loading {
+  margin-top: 20px;
+}
+
+body {
+  background-color: #D8D8D8;
+}
+
+select {
+  padding:10px;
+  margin-left: 10px;
+  border-color:#E0E0E0 ;
+}
+
+li {
+  font-family: 'Open Sans', sans-serif;
+  list-style-type: none;
+}
