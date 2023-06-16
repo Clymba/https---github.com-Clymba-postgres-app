@@ -10,6 +10,11 @@ const UpdateCategoryForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (Object.values(formData).some((value) => value.trim() === '')) {
+      setError('Please fill in all fields');
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:8080/api/category_of_account`, {
         method: 'PUT',
@@ -22,6 +27,7 @@ const UpdateCategoryForm = () => {
       if (response.ok) {
         console.log('Category updated successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to update category');
@@ -37,6 +43,7 @@ const UpdateCategoryForm = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError('');
   };
 
   return (

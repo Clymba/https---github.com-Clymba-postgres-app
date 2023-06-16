@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const UpdateCourseForm = () => {
+const UpdateGroupForm = () => {
   const [formData, setFormData] = useState({
     code_course: '',
     type_of_cousre: '',
@@ -9,6 +9,11 @@ const UpdateCourseForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (Object.values(formData).some((value) => value.trim() === '')) {
+      setError('Please fill in all fields');
+      return;
+    }
 
     try {
       const response = await fetch(`http://localhost:8080/api/course`, {
@@ -22,9 +27,10 @@ const UpdateCourseForm = () => {
       if (response.ok) {
         console.log('Course updated successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
-        setError(errorData.detail || 'Failed to update course');
+        setError(errorData.error || 'Failed to update Course');
       }
     } catch (error) {
       console.log('Error:', error);
@@ -37,12 +43,13 @@ const UpdateCourseForm = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Code_course to update:
+        Code Course to update:
         <input
           type="text"
           name="code_course"
@@ -52,11 +59,11 @@ const UpdateCourseForm = () => {
       </label>
       <br />
       <label>
-      Type_of_cousre:
+        type_of_course:
         <input
           type="text"
           name="type_of_cousre"
-          value={formData.type_of_cousre}
+          value={formData.ty}
           onChange={handleChange}
         />
       </label>
@@ -67,4 +74,4 @@ const UpdateCourseForm = () => {
   );
 };
 
-export default UpdateCourseForm;
+export default UpdateGroupForm;

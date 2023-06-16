@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 
-const AddCourseForm = () => {
+const CreateCourseForm = () => {
   const [formData, setFormData] = useState({
-    code_course: '',
+    code_course: '', 
     date_of_start: '',
-    date_of_end: '',
-    type_of_cousre: '',
-    status_of_course: '',
+    date_of_end: '', 
+    type_of_cousre: '', 
+    status_of_course: ''
   });
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (Object.values(formData).some((value) => value.trim() === '')) {
+      setError('Please fill in all fields');
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:8080/api/course', {
@@ -21,16 +26,18 @@ const AddCourseForm = () => {
         },
         body: JSON.stringify(formData),
       });
+
       if (response.ok) {
-        console.log('Course added successfully');
+        console.log('course created successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
-        setError(errorData.detail || 'Failed to add course');
+        setError(errorData.error || 'Failed to create course');
       }
     } catch (error) {
       console.log('Error:', error);
-      setError('Введено ошибочное или пустое поле');
+      setError('An error occurred while creating the course');
     }
   };
 
@@ -39,12 +46,13 @@ const AddCourseForm = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Code_course:
+        Code course:
         <input
           type="text"
           name="code_course"
@@ -54,37 +62,34 @@ const AddCourseForm = () => {
       </label>
       <br />
       <label>
-        Date_of_start:
+        date_of_start:
         <input
           type="date"
           name="date_of_start"
           value={formData.date_of_start}
           onChange={handleChange}
         />
-      </label>
-      <br />
-      <label>
-        Date_of_end:
+        </label>
+        <label>
+        date_of_end:
         <input
           type="date"
           name="date_of_end"
           value={formData.date_of_end}
           onChange={handleChange}
         />
-      </label>
-      <br />
-      <label>
-        Type_of_cousre:
+        </label>
+        <label>
+        type_of_cousre:
         <input
           type="text"
           name="type_of_cousre"
           value={formData.type_of_cousre}
           onChange={handleChange}
         />
-      </label>
-      <br />
-      <label>
-        Status_of_course:
+        </label>
+        <label>
+        status_of_course:
         <input
           type="text"
           name="status_of_course"
@@ -94,9 +99,9 @@ const AddCourseForm = () => {
       </label>
       <br />
       {error && <p>Error: {error}</p>}
-      <button type="submit">Add Course</button>
+      <button type="submit">Create course</button>
     </form>
   );
 };
 
-export default AddCourseForm;
+export default CreateCourseForm;

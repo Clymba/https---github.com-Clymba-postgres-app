@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const CreateUserForm = () => {
   const [code_user, setCodeUser] = useState('');
@@ -6,87 +6,115 @@ const CreateUserForm = () => {
   const [e_mail, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [name_, setName] = useState('');
-  const [famille, setFamille] = useState('');
-  const [patronymique, setPatronymique] = useState('');
-  const [biography, setBiography] = useState('');
+  const [family, setFamily] = useState('');
+  const [patronymique, setPatronymic] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/category_of_account');
+      if (response.ok) {
+        const categoriesData = await response.json();
+        setCategories(categoriesData);
+      } else {
+        setError('Failed to fetch categories');
+      }
+    } catch (error) {
+      setError('Создано существующее значение');
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const newUser = {
-      code_user,
-      fk_code_category,
-      e_mail,
-      gender,
-      name_,
-      famille,
-      patronymique,
-      biography
-    };
 
-    fetch('/api/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newUser)
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to create user');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('User created:', data);
-        // Handle success
-        // ...
-      })
-      .catch(error => {
-        console.error('Error creating user:', error);
-        // Handle error
-        // ...
+    if (!code_user || !fk_code_category || !e_mail || !gender || !name_ || !family || !patronymique) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8080/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code_user: code_user,
+          fk_code_category: fk_code_category,
+          e_mail: e_mail,
+          gender,
+          name_,
+          famille: family,
+          patronymique
+        }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'An error occurred while creating the user');
+      }
+
+      const data = await response.json();
+      console.log('User created:', data);
+      setCodeUser('');
+      setCategory('');
+      setEmail('');
+      setGender('');
+      setName('');
+      setFamily('');
+      setPatronymic('');
+      setError('');
+    } catch (error) {
+      console.error('Error creating user:', error.message);
+      setError(error.message);
+    }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Code User:</label>
-          <input type="text" value={code_user} onChange={(e) => setCodeUser(e.target.value)} />
-        </div>
-        <div>
-          <label>Category:</label>
-          <input type="text" value={fk_code_category} onChange={(e) => setCategory(e.target.value)} />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input type="text" value={e_mail} onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div>
-          <label>Gender:</label>
-          <input type="text" value={gender} onChange={(e) => setGender(e.target.value)} />
-        </div>
-        <div>
-          <label>Name:</label>
-          <input type="text" value={name_} onChange={(e) => setName(e.target.value)} />
-        </div>
-        <div>
-          <label>Famille:</label>
-          <input type="text" value={famille} onChange={(e) => setFamille(e.target.value)} />
-        </div>
-        <div>
-          <label>Patronymique:</label>
-          <input type="text" value={patronymique} onChange={(e) => setPatronymique(e.target.value)} />
-        </div>
-        <div>
-          <label>Biography:</label>
-          <input type="text" value={biography} onChange={(e) => setBiography(e.target.value)} />
-        </div>
-        <button type="submit">Create</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <label>
+        Code User:
+        <input type="text" value={code_user} onChange={(e) => setCodeUser(e.target.value)} />
+      </label>
+      <label>
+        Category:
+        <select value={fk_code_category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="">Select Category</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.code_category}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Email:
+        <input type="email" value={e_mail} onChange={(e) => setEmail(e.target.value)} />
+      </label>
+      <label>
+        Gender:
+        <input type="text" value={gender} onChange={(e) => setGender(e.target.value)} />
+      </label>
+      <label>
+        Name:
+        <input type="text" value={name_} onChange={(e) => setName(e.target.value)} />
+      </label>
+      <label>
+        Family:
+        <input type="text" value={family} onChange={(e) => setFamily(e.target.value)} />
+      </label>
+      <label>
+        Patronymic:
+        <input type="text" value={patronymique} onChange={(e) => setPatronymic(e.target.value)} />
+      </label>
+      {error && <div className="error">{error}</div>}
+      <button type="submit">Create User</button>
+    </form>
   );
 };
 

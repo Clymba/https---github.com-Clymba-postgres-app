@@ -1,47 +1,54 @@
 import React, { useState } from 'react';
 
 const DeleteCourseForm = () => {
-  const [codeCourse, setCodeCourse] = useState('');
+  const [code_course, setCodecourse] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!code_course) {
+      setError('Please enter the course code');
+      return;
+    }
+
     try {
-      const response = await fetch(`http://localhost:8080/api/course/${codeCourse}`, {
+      const response = await fetch(`http://localhost:8080/api/course/${code_course}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        console.log('Course deleted successfully');
+        console.log('course deleted successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
-        setError(errorData.detail || 'Failed to delete course');
+        setError(errorData.error || 'Failed to delete course');
       }
     } catch (error) {
       console.log('Error:', error);
-      setError('Такого значения не существует или введен не тот тип данных');
+      setError('An error occurred while deleting the course');
     }
   };
 
   const handleChange = (e) => {
-    setCodeCourse(e.target.value);
+    setCodecourse(e.target.value);
+    setError('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Code_course to delete:
+        Code course:
         <input
           type="text"
-          value={codeCourse}
+          value={code_course}
           onChange={handleChange}
         />
       </label>
       <br />
       {error && <p>Error: {error}</p>}
-      <button type="submit">Delete Course</button>
+      <button type="submit">Delete course</button>
     </form>
   );
 };

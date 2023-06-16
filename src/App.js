@@ -3,16 +3,16 @@ import CreateCategoryForm from './category_of_account/create'
 import UpdateCategoryForm from './category_of_account/update'
 import DeleteCategoryForm from './category_of_account/delete'
 import TeacherCountForm from './view'
-import CreateUser from './user/create';
+import CreateUserForm from './user/create';
 import DeleteUserForm from './user/delete'
 import UpdateUserForm from './user/update'
-import CreateSupervisor from './supervisor/create'
+import CreateSupervisorForm from './supervisor/create'
 import DeleteSupervisorForm from './supervisor/delete'
 import UpdateSupervisorForm from './supervisor/update'
 import CreateGroupForm from './group/create'
 import DeleteGroupForm from './group/delete'
 import UpdateGroupForm from './group/update'
-import AddCourseForm from './course/create'
+import CreateCourseForm from './course/create'
 import DeleteCourseForm from './course/delete'
 import UpdateCourseForm from './course/update'
 import Func from './function'
@@ -33,7 +33,7 @@ const App = () => {
       <DeleteCategoryForm />
       <hr />
       <h1>Create User</h1>
-      <CreateUser />
+      <CreateUserForm />
       <hr />
       <h1>Delete User</h1>
       <DeleteUserForm />
@@ -42,7 +42,7 @@ const App = () => {
       <UpdateUserForm />
       <hr />
       <h1>Create Supervisor</h1>
-      <CreateSupervisor />
+      <CreateSupervisorForm />
       <hr />
       <h1>Delete Supervisor</h1>
       <DeleteSupervisorForm />
@@ -60,7 +60,7 @@ const App = () => {
       <UpdateGroupForm />
       <hr />
       <h1>Create Course</h1>
-      <AddCourseForm />
+      <CreateCourseForm />
       <hr />
       <h1>Update Course</h1>
       <UpdateCourseForm />

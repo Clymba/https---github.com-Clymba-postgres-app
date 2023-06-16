@@ -32,6 +32,11 @@ const CreateSupervisorForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (Object.values(formData).some((value) => value.trim() === '')) {
+      setError('Please fill in all fields');
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:8080/api/supervisor', {
         method: 'POST',
@@ -44,6 +49,7 @@ const CreateSupervisorForm = () => {
       if (response.ok) {
         console.log('Supervisor created successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to create supervisor');
@@ -59,6 +65,7 @@ const CreateSupervisorForm = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError('');
   };
 
   return (

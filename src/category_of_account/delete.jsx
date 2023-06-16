@@ -7,6 +7,11 @@ const DeleteCategoryForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!code_сategory) {
+      setError('Please enter the category code');
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:8080/api/category_of_account/${code_сategory}`, {
         method: 'DELETE',
@@ -15,6 +20,7 @@ const DeleteCategoryForm = () => {
       if (response.ok) {
         console.log('Category deleted successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to delete category');
@@ -27,6 +33,7 @@ const DeleteCategoryForm = () => {
 
   const handleChange = (e) => {
     setCodeCategory(e.target.value);
+    setError('');
   };
 
   return (

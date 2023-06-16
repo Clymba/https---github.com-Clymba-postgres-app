@@ -7,6 +7,11 @@ const DeleteSupervisorForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!codeSupervisor) {
+      setError('Please enter the supervisor code');
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:8080/api/supervisor/${codeSupervisor}`, {
         method: 'DELETE',
@@ -15,6 +20,7 @@ const DeleteSupervisorForm = () => {
       if (response.ok) {
         console.log('Supervisor deleted successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to delete supervisor');
@@ -27,6 +33,7 @@ const DeleteSupervisorForm = () => {
 
   const handleChange = (e) => {
     setCodeSupervisor(e.target.value);
+    setError('');
   };
 
   return (

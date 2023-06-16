@@ -10,6 +10,11 @@ const UpdateSupervisorForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (Object.values(formData).some((value) => value.trim() === '')) {
+      setError('Please fill in all fields');
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:8080/api/supervisor`, {
         method: 'PUT',
@@ -22,6 +27,7 @@ const UpdateSupervisorForm = () => {
       if (response.ok) {
         console.log('Supervisor updated successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to update supervisor');
@@ -37,6 +43,7 @@ const UpdateSupervisorForm = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError('');
   };
 
   return (

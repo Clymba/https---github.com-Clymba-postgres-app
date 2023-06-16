@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 
 const DeleteUserForm = () => {
-  const [codeUser, setCodeUser] = useState('');
+  const [codeuser, setCodeuser] = useState('');
   const [error, setError] = useState('');
 
-  const handleDelete = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!codeuser) {
+      setError('Please enter the user code');
+      return;
+    }
+
     try {
-      const response = await fetch(`http://localhost:8080/api/user`, {
+      const response = await fetch(`http://localhost:8080/api/user/${codeuser}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        console.log('User deleted successfully');
+        console.log('user deleted successfully');
         // Perform any additional actions on success
       } else {
         const errorData = await response.json();
@@ -19,28 +26,28 @@ const DeleteUserForm = () => {
       }
     } catch (error) {
       console.log('Error:', error);
-      setError('An error occurred while deleting the user');
+      setError('An error occurred while deleting user');
     }
   };
 
   const handleChange = (e) => {
-    setCodeUser(e.target.value);
+    setCodeuser(e.target.value);
   };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <label>
-        Code_user to delete:
+        Code user to delete:
         <input
           type="text"
-          value={codeUser}
+          value={codeuser}
           onChange={handleChange}
         />
       </label>
       <br />
       {error && <p>Error: {error}</p>}
-      <button onClick={handleDelete}>Delete User</button>
-    </div>
+      <button type="submit">Delete user</button>
+    </form>
   );
 };
 

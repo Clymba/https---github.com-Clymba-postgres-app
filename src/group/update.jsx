@@ -10,8 +10,13 @@ const UpdateGroupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (Object.values(formData).some((value) => value.trim() === '')) {
+      setError('Please fill in all fields');
+      return;
+    }
+
     try {
-      const response = await fetch('http://localhost:8080/api/group', {
+      const response = await fetch(`http://localhost:8080/api/group`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -20,11 +25,12 @@ const UpdateGroupForm = () => {
       });
 
       if (response.ok) {
-        console.log('Group updated successfully');
+        console.log('group updated successfully');
         // Perform any additional actions on success
+        setError('');
       } else {
         const errorData = await response.json();
-        setError(errorData.detail || 'Failed to update group');
+        setError(errorData.error || 'Failed to update group');
       }
     } catch (error) {
       console.log('Error:', error);
@@ -37,14 +43,15 @@ const UpdateGroupForm = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Code_group:
+        Code group to update:
         <input
-          type="number"
+          type="text"
           name="code_group"
           value={formData.code_group}
           onChange={handleChange}
@@ -52,11 +59,11 @@ const UpdateGroupForm = () => {
       </label>
       <br />
       <label>
-        Name_c:
+        name_c:
         <input
           type="text"
           name="name_c"
-          value={formData.name_c}
+          value={formData.ty}
           onChange={handleChange}
         />
       </label>
